@@ -12,7 +12,7 @@ use ExtUtils::MakeMaker;
 $PACKAGE = 'Tie::Cache::LRU';
 ($PACKAGE_FILE = $PACKAGE) =~ s|::|/|g;
 $LAST_API_CHANGE = '0.05';
-$LAST_MAJOR_BUG  = '0.05';
+$LAST_MAJOR_BUG  = '0.20';
 
 eval "require $PACKAGE";
 
@@ -35,8 +35,10 @@ WriteMakefile(
     NAME                => $PACKAGE,
     VERSION_FROM        => "lib/$PACKAGE_FILE.pm", # finds $VERSION
     PREREQ_PM           => { 
-                            Carp::Assert    =>  0,
-                            enum            =>  0,
+                            Carp::Assert    => 0,
+                            enum            => 0,
+                            Class::Virtual  => 0,
+                            Class::Data::Inheritable => 0,
                            },
     'dist'              => { COMPRESS   => 'gzip -9',
                              SUFFIX     => '.gz',
