@@ -1,4 +1,9 @@
-Revision history for Perl extension Tie::Cache::InMemory::LastUse.
+Revision history for Perl extension Tie::Cache::LRU.
+
+0.06  Fri Feb 11 17:21:39 EST 2000
+    * Fixed a MAJOR memory leak.  Basically CLEAR (%cached = ()) leaked
+      the entire cache.
+    * Caches with a max_size of 1 or 0 weren't working properly.
 
 0.01  Thu May  6 16:08:26 1999
     - original version; created by h2xs 1.19
