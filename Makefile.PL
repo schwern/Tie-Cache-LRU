@@ -10,13 +10,11 @@ use ExtUtils::MakeMaker;
 # the contents of the Makefile that is written.
 
 $PACKAGE = 'Tie::Cache::LRU';
-($PACKAGE_FILE) = $PACKAGE =~ /(?:\::)([^:]+)$/;
+($PACKAGE_FILE = $PACKAGE) =~ s|::|/|g;
 $LAST_API_CHANGE = '0.05';
 $LAST_MAJOR_BUG  = '0.05';
 
-eval {
-    eval "require $PACKAGE";
-};
+eval "require $PACKAGE";
 
 unless ($@) { # Make sure we did find the module.
     print <<"CHANGE_WARN" if ${$PACKAGE.'::VERSION'} < $LAST_API_CHANGE;
@@ -35,7 +33,7 @@ BUG_WARN
 
 WriteMakefile(
     NAME                => $PACKAGE,
-    VERSION_FROM        => "$PACKAGE_FILE.pm", # finds $VERSION
+    VERSION_FROM        => "lib/$PACKAGE_FILE.pm", # finds $VERSION
     PREREQ_PM           => { 
                             Carp::Assert    =>  0,
                             enum            =>  0,
