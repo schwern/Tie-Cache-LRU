@@ -6,7 +6,7 @@ use Carp::Assert;
 #use base qw(Tie::Cache::LastUse Tie::Cache::InMemory);
 use vars qw($VERSION);
 BEGIN { 
-    $VERSION = 0.03;
+    $VERSION = 0.04;
 }
 
 use constant DEFAULT_MAX_SIZE => 500;
@@ -143,8 +143,10 @@ sub FIRSTKEY {
 sub NEXTKEY  {
 	my($self, $last_key) = @_;
 	my $last_node = $self->{index}{$last_key};
-	assert(defined $last_node);
-	return defined $last_node ? $last_node->[PREV][KEY]
+	assert(defined $last_node) if DEBUG;
+
+	# NEXTKEY uses PREV, yes.  We're going from newest to oldest.
+	return defined $last_node->[PREV] ? $last_node->[PREV][KEY]
 							  : undef;
 }
 
