@@ -1,5 +1,5 @@
 Changes
-LastUse.pm
+LRU.pm
 Makefile.PL
 MANIFEST
 test.pl
