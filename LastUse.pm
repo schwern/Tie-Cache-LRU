@@ -9,6 +9,8 @@ BEGIN {
     $VERSION = 0.02;
 }
 
+use constant DEFAULT_MAX_SIZE => 500;
+
 use constant SUCCESS => 1;
 use constant FAILURE => 0;
 
@@ -45,6 +47,8 @@ sub TIEHASH {
 	
 	bless $self, $class;
 	
+	$max_size = DEFAULT_MAX_SIZE unless defined $max_size;
+
 	$self->_init;
 	$self->{max_size} = $max_size;
 
@@ -237,6 +241,8 @@ sub _cull {
 		$new_stink->[PREV] = undef;
 		
 		$self->{stinkiest} = $new_stink;
+
+		delete $self->{index}{$rotten->[KEY]};
 	}
 	
 	return SUCCESS;

@@ -88,3 +88,11 @@ ok(eqarray([qw(bing har bar)], [keys %cache]), 'front delete');  # 9
 # Try in the middle
 delete $cache{har};
 ok(eqarray([qw(bing bar)], [keys %cache]), 'middle delete'); #10
+
+# Add a bunch of stuff and make sure the index doesn't grow.
+@cache{qw(1 2 3 4 5 6 7 8 9 10)} = qw(11 12 13 14 15 16 17 18 19 20);
+ok(keys %{tied(%cache)->{index}} == 5);
+
+
+
+
