@@ -6,7 +6,7 @@ use Carp::Assert;
 #use base qw(Tie::Cache::LastUse Tie::Cache::InMemory);
 use vars qw($VERSION);
 BEGIN { 
-    $VERSION = 0.02;
+    $VERSION = 0.03;
 }
 
 use constant DEFAULT_MAX_SIZE => 500;
