@@ -199,15 +199,15 @@ sub _promote {
 	# already the freshest.
 	return if $self->{size} == 1 or $self->{freshest} == $node;
 	
-	# Pull the $node out of its position.
-	$self->_yank($node);
-
-	# On the off chance that we're about to promote the stinkiest node, 
+	# On the off chance that we're about to promote the stinkiest node,
 	# make sure the stinkiest pointer is updated.
 	if( $self->{stinkiest} == $node ) {
 		assert(not defined $node->[PREV]);
 		$self->{stinkiest} = $node->[NEXT];
 	}
+
+	# Pull the $node out of its position.
+	$self->_yank($node);
 	
 	# Place the $node at the head.
 	my $old_head  = $self->{freshest};
