@@ -2,6 +2,6 @@ Changes
 LRU.pm
 Makefile.PL
 MANIFEST
-test.pl
+t/LRU.t
 README
 INSTALL
