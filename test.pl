@@ -11,7 +11,7 @@ my $loaded;
 my $test_num = 1;
 BEGIN { $| = 1; $^W = 1; }
 END {print "not ok $test_num\n" unless $loaded;}
-use Tie::Cache::InMemory::LastUse;
+use Tie::Cache::LRU;
 $loaded = 1;
 print "ok $test_num\n";
 $test_num++;
@@ -21,7 +21,7 @@ $test_num++;
 # (correspondingly "not ok 13") depending on the success of chunk 13
 # of the test code):
 sub ok {
-	my($test, $name) = shift;
+	my($test, $name) = @_;
 	print "not " unless $test;
 	print "ok $test_num";
 	print " - $name" if defined $name;
@@ -43,7 +43,7 @@ sub eqarray  {
 }
 
 my %cache;
-my $tied = tie %cache, 'Tie::Cache::InMemory::LastUse', 5;
+my $tied = tie %cache, 'Tie::Cache::LRU', 5;
 ok(defined $tied, 'tie'); # 2
 
 $cache{foo} = "bar";
@@ -94,5 +94,23 @@ ok(eqarray([qw(bing bar)], [keys %cache]), 'middle delete'); #10
 ok(keys %{tied(%cache)->{index}} == 5);
 
 
+# Test accessing the sizes.
+my $cache = tied %cache;
+ok( $cache->curr_size == 5,				       'curr_size()' );
+ok( $cache->max_size  == 5,				       'max_size()'  );
+
+# Test lowering the max_size.
+my @keys = keys %cache;
+
+$cache->max_size(2);
+ok( $cache->curr_size == 2 );
+ok( keys %cache == 2 );
+ok( eqarray( [@keys[0..1]], [keys %cache] ) );
 
 
+# Test raising the max_size.
+$cache->max_size(10);
+ok( $cache->curr_size == 2 );
+for (21..28) { $cache{$_} = 'new' }
+ok( $cache->curr_size == 10 );
+ok( eqarray( [@keys[0..1]], [(keys %cache)[-2,-1]] ) );
