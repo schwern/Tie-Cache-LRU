@@ -2,7 +2,7 @@ package Tie::Cache::LRU::Array;
 
 use strict;
 use vars qw($VERSION);
-$VERSION = '0.01';
+$VERSION = '0.02';
 
 use Carp::Assert;
 use base qw(Tie::Cache::LRU::Virtual);
@@ -87,6 +87,8 @@ sub _promote {
     $cache->[$idx] = undef;
     push @$cache, $node;
     $self->{index}{$key} = $#{$cache};
+
+    $self->_reorder_cache if $#$cache > $self->{size} * 2;
     return $node;
 }
 
@@ -255,8 +257,7 @@ Michael G Schwern <schwern@pobox.com>
 
 =head1 SEE ALSO
 
-L<Tie::Cache::LRU>, L<Tie::Cache::LRU::Array>,
-L<Tie::Cache::LRU::Virtual>, L<Tie::Cache>
+L<Tie::Cache::LRU>, L<Tie::Cache::LRU::Virtual>, L<Tie::Cache>
 
 =cut
 
