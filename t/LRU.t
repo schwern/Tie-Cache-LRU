@@ -7,19 +7,19 @@
 # (It may become useful if the test is moved to ./t subdirectory.)
 use strict;
 
+use vars qw($Total_tests);
+
 my $loaded;
 my $test_num = 1;
 BEGIN { $| = 1; $^W = 1; }
 END {print "not ok $test_num\n" unless $loaded;}
+print "1..$Total_tests\n";
 use Tie::Cache::LRU;
 $loaded = 1;
-print "ok $test_num\n";
-$test_num++;
+ok(1, 'compile');
 ######################### End of black magic.
 
-# Insert your test code below (better if it prints "ok 13"
-# (correspondingly "not ok 13") depending on the success of chunk 13
-# of the test code):
+# Utility testing functions
 sub ok {
     my($test, $name) = @_;
     print "not " unless $test;
@@ -41,6 +41,9 @@ sub eqarray  {
     }
     return $ok;
 }
+
+
+BEGIN { $Total_tests = 29 }
 
 my %cache;
 my $tied = tie %cache, 'Tie::Cache::LRU', 5;
