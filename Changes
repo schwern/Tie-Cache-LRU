@@ -5,6 +5,14 @@ Revision history for Perl extension Tie::Cache::LRU.
       the entire cache.
     * Caches with a max_size of 1 or 0 weren't working properly.
 
+0.05  Thu Oct  7 01:14:34 EST 1999
+    * Name changed to Tie::Cache::LRU for brevity
+    * First release to CPAN.
+    * DESCRIPTION expanded and the tie interface documented.
+    - added max_size() and curr_size()
+
 0.01  Thu May  6 16:08:26 1999
+    * Created as Tie::Cache::InMemory::LastUse
+    - internal release for Arena
     - original version; created by h2xs 1.19
 
