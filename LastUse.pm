@@ -6,7 +6,7 @@ use Carp::Assert;
 #use base qw(Tie::Cache::LastUse Tie::Cache::InMemory);
 use vars qw($VERSION);
 BEGIN { 
-    $VERSION = 0.01 
+    $VERSION = 0.02;
 }
 
 use constant SUCCESS => 1;
@@ -201,6 +201,13 @@ sub _promote {
 	
 	# Pull the $node out of its position.
 	$self->_yank($node);
+
+	# On the off chance that we're about to promote the stinkiest node, 
+	# make sure the stinkiest pointer is updated.
+	if( $self->{stinkiest} == $node ) {
+		assert(not defined $node->[PREV]);
+		$self->{stinkiest} = $node->[NEXT];
+	}
 	
 	# Place the $node at the head.
 	my $old_head  = $self->{freshest};
@@ -210,12 +217,6 @@ sub _promote {
 
 	$self->{freshest} = $node;
 	
-	# On the off chance that we just promoted the stinkiest node, make sure
-	# the stinkiest pointer is updated.
-	if( $self->{stinkiest} == $node ) {
-		assert(not defined $node->[PREV]);
-		$self->{stinkiest} = $node->[NEXT];
-	}
 	
 	return SUCCESS;
 }
