@@ -1,5 +1,11 @@
 Revision history for Perl extension Tie::Cache::LRU.
 
+0.20  Sun Jul 29 02:07:03 PDT 2001
+    * Split into two implementations, Tie::Cache::LRU::Array and
+      Tie::Cache::LRU::LinkedList
+    * Tie::Cache::LRU now using Array implementation.  Much faster.
+    * Now faster than Tie::Cache *smug grin*
+
 0.06  Fri Feb 11 17:21:39 EST 2000
     * Fixed a MAJOR memory leak.  Basically CLEAR (%cached = ()) leaked
       the entire cache.
