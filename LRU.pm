@@ -1,12 +1,14 @@
 package Tie::Cache::LRU;
 
+use strict;
+
 require 5.00502;
 
 use Carp::Assert;
 
 use vars qw($VERSION);
 BEGIN { 
-    $VERSION = 0.05;
+    $VERSION = 0.06;
 }
 
 use constant DEFAULT_MAX_SIZE => 500;
@@ -206,17 +208,11 @@ sub NEXTKEY  {
                               : undef;
 }
 
-# The chain must be broken.
+
 sub DESTROY  {
     my($self) = shift;
-    
-    for(my $node = $self->{freshest}; defined $node; ) {
-        my $prev_node = $node->[PREV];
-        $node->[PREV] = undef;
-        $node->[NEXT] = undef;
-        $node = $prev_node;
-    }
-    
+
+    # The chain must be broken.
     $self->_init;
     
     return SUCCESS;
@@ -293,10 +289,16 @@ sub curr_size {
 
 sub _init {
     my($self) = shift;
-    
-    $self->{cache} = undef;
-    $self->{freshest} = undef;
-    $self->{stinkiest}   = undef;
+
+    # The cache is a chain.  We must break up its structure so Perl
+    # can GC it.
+    while( my($key, $node) = each %{$self->{index}} ) {
+        $node->[NEXT] = undef;
+        $node->[PREV] = undef;
+    }
+
+    $self->{freshest}  = undef;
+    $self->{stinkiest} = undef;
     $self->{index} = {};
     $self->{size} = 0;
     
@@ -361,13 +363,19 @@ sub _cull {
     my $max_size = $self->{max_size};
     for( ;$self->{size} > $max_size; $self->{size}-- ) {
         my $rotten = $self->{stinkiest};
-        assert(!defined $rotton->[PREV]);
+        assert(!defined $rotten->[PREV]);
         my $new_stink = $rotten->[NEXT];
         
         $rotten->[NEXT]    = undef;
-        $new_stink->[PREV] = undef;
+        
+        # Gotta watch out for autoviv.
+        $new_stink->[PREV] = undef if defined $new_stink;
         
         $self->{stinkiest} = $new_stink;
+        if( $self->{freshest} eq $rotten ) {
+            assert( $self->{size} == 1 ) if DEBUG;
+            $self->{freshest}  = $new_stink;
+        }
 
         delete $self->{index}{$rotten->[KEY]};
     }
