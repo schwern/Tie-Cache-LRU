@@ -46,6 +46,16 @@ my %cache;
 my $tied = tie %cache, 'Tie::Cache::LRU', 5;
 ok(defined $tied, 'tie'); # 2
 
+
+#use Devel::Leak;
+
+# Begin watching for leaks.
+#my $handle;
+#my $leak_count = Devel::Leak::NoteSV($handle);
+
+
+{
+
 $cache{foo} = "bar";
 ok($cache{foo} eq 'bar', 'basic store & fetch'); # 3
 
@@ -100,7 +110,7 @@ ok( $cache->curr_size == 5,                    'curr_size()' );
 ok( $cache->max_size  == 5,                    'max_size()'  );
 
 # Test lowering the max_size.
-my @keys = keys %cache;
+@keys = keys %cache;
 
 $cache->max_size(2);
 ok( $cache->curr_size == 2 );
@@ -111,6 +121,29 @@ ok( eqarray( [@keys[0..1]], [keys %cache] ) );
 # Test raising the max_size.
 $cache->max_size(10);
 ok( $cache->curr_size == 2 );
-for (21..28) { $cache{$_} = 'new' }
+for my $num (21..28) { $cache{$num} = "THIS IS REALLY OBVIOUS:  $num" }
 ok( $cache->curr_size == 10 );
 ok( eqarray( [@keys[0..1]], [(keys %cache)[-2,-1]] ) );
+
+%cache = ();
+ok( $cache->curr_size == 0 );
+ok( keys   %cache     == 0 );
+ok( values %cache     == 0 );
+ok( $cache->max_size == 10 );
+
+}
+
+#Devel::Leak::CheckSV($handle);
+
+
+# Make sure an empty cache will work.
+my %null_cache;
+$tied = tie %null_cache, 'Tie::Cache::LRU', 0;
+ok(defined $tied, 'tie() null cache');
+
+$null_cache{foo} = "bar";
+ok(!exists $null_cache{foo},    'basic null cache exists()' );
+ok( $tied->curr_size == 0,      'curr_size() null cache' );
+ok( keys   %null_cache == 0,    'keys() null cache' );
+ok( values %null_cache == 0,    'values() null cache' );
+ok( $tied->max_size == 0,      'max_size() null cache' );
