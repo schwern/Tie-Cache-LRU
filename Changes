@@ -1,5 +1,9 @@
 Revision history for Perl extension Tie::Cache::LRU.
 
+0.21  Wed Apr 10 23:20:39 EDT 2002
+    * mjd found a bug in Tie::Cache::LRU::Array which caused the
+      cache to slowly grow over time.
+
 0.20  Sun Jul 29 02:07:03 PDT 2001
     * Split into two implementations, Tie::Cache::LRU::Array and
       Tie::Cache::LRU::LinkedList

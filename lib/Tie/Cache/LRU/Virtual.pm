@@ -1,49 +1,69 @@
-package Tie::Cache::LRU;
+package Tie::Cache::LRU::Virtual;
 
 use strict;
-
-use base qw(Tie::Cache::LRU::Array);
-
 use vars qw($VERSION);
-BEGIN {
-    $VERSION = '0.21';
-}
+$VERSION = '0.01';
+
+use base qw(Class::Virtual Class::Data::Inheritable);
+
+__PACKAGE__->mk_classdata('DEFAULT_MAX_SIZE');
+__PACKAGE__->DEFAULT_MAX_SIZE(500);
+
+__PACKAGE__->virtual_methods(qw(TIEHASH
+                                CLEAR
+                                FETCH
+                                STORE
+                                EXISTS
+                                DELETE
+                                FIRSTKEY
+                                NEXTKEY
+                                DESTROY
+
+                                curr_size
+                                max_size
+                               )
+                             );
 
 =pod
 
 =head1 NAME
 
-Tie::Cache::LRU - A Least-Recently Used cache
-
+Tie::Cache::LRU::Virtual - Virtual base class for Tie::Cache::LRU::*
 
 =head1 SYNOPSIS
 
-    use Tie::Cache::LRU;
+  package My::Tie::Cache::LRU;
 
-    tie %cache, 'Tie::Cache::LRU', 500;
-    tie %cache, 'Tie::Cache::LRU', '400k'; #UNIMPLEMENTED
+  use base qw(Tie::Cache::LRU::Virtual);
 
-    # Use like a normal hash.
-
-    $cache_obj = tied %cache;
-    $current_size = $cache_obj->curr_size;
-
-    $max_size = $cache_obj->max_size;
-    $cache_obj->max_size($new_size);
-
+  ...override and define key methods...
 
 =head1 DESCRIPTION
 
-This is an implementation of a least-recently used (LRU) cache keeping
-the cache in RAM.
+This is a pure virtual base class defining the public methods of
+Tie::Cache::LRU.  It is intended that you will subclass off of it and
+fill in the missing/incomplete methods.
 
-A LRU cache is similar to the kind of cache used by a web browser.
-New items are placed into the top of the cache.  When the cache grows
-past its size limit, it throws away items off the bottom.  The trick
-is that whenever an item is -accessed-, it is pulled back to the top.
-The end result of all this is that items which are frequently accessed
-tend to stay in the cache.
+You must implement the entire hash interface.
 
+    TIEHASH
+    CLEAR
+    FETCH
+    STORE
+    EXISTS
+    DELETE
+    FIRSTKEY
+    NEXTKEY
+
+And the object interface
+
+    curr_size
+    max_size
+
+As well as DESTROY if necessary.
+
+I'm usually not taken to such heights of OO formality, but in this
+case a virtual class seemed in order.
 
 
 =head1 USAGE
@@ -80,7 +100,7 @@ this:
 
 This ties a cache to %cache which will hold a maximum of $cache_size
 keys.  If $cache_size is not given it uses a default value,
-Tie::Cache::LRU->DEFAULT_MAX_SIZE.
+Tie::Cache::LRU::DEFAULT_MAX_SIZE.
 
 If the size is set to 0, the cache is effectively turned off.  This is
 useful for "removing" the cache from a program without having to make
@@ -90,6 +110,8 @@ differences with and without a cache.
 All of the expected hash operations (exists, delete, slices, etc...) 
 work on the %cache.
 
+
+=pod
 
 =back
 
@@ -124,32 +146,19 @@ The size must be an integer greater than or equal to 0.
 
 Returns the current number of items in the cache.
 
-
 =back
-
-
-=head1 NOTES
-
-This is just a thin subclass of Tie::Cache::LRU::Array.
-
-
-=head1 TODO
-
-Should eventually allow the cache to be in shared memory.
-
-Max size by memory use unimplemented.
 
 
 =head1 AUTHOR
 
-Michael G Schwern <schwern@pobox.com> for Arena Networks
-
+Michael G Schwern <schwern@pobox.com>
 
 =head1 SEE ALSO
 
-L<Tie::Cache::LRU::Array>, L<Tie::Cache::LRU::LinkedList>,
-L<Tie::Cache::LRU::Virtual>, L<Tie::Cache>
+L<Tie::Cache::LRU>, L<Tie::Cache::LRU::LinkedList>,
+L<Tie::Cache::LRU::Array>, L<Tie::Cache>
 
 =cut
 
-return q|Look at me, look at me!  I'm super fast!  I'm bionic!  I'm bionic!|;
+1;
+
