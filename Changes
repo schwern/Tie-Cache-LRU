@@ -1,5 +1,5 @@
 Revision history for Perl extension Tie::Cache::InMemory::LastUse.
 
 0.01  Thu May  6 16:08:26 1999
-	- original version; created by h2xs 1.19
+    - original version; created by h2xs 1.19
 

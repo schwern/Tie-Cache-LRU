@@ -21,25 +21,25 @@ $test_num++;
 # (correspondingly "not ok 13") depending on the success of chunk 13
 # of the test code):
 sub ok {
-	my($test, $name) = @_;
-	print "not " unless $test;
-	print "ok $test_num";
-	print " - $name" if defined $name;
-	print "\n";
-	$test_num++;
+    my($test, $name) = @_;
+    print "not " unless $test;
+    print "ok $test_num";
+    print " - $name" if defined $name;
+    print "\n";
+    $test_num++;
 }
 
 sub eqarray  {
-	my($a1, $a2) = @_;
-	return 0 unless @$a1 == @$a2;
-	my $ok = 1;
-	for (0..$#{$a1}) { 
-	    unless($a1->[$_] eq $a2->[$_]) {
-		$ok = 0;
-		last;
-	    }
-	}
-	return $ok;
+    my($a1, $a2) = @_;
+    return 0 unless @$a1 == @$a2;
+    my $ok = 1;
+    for (0..$#{$a1}) { 
+        unless($a1->[$_] eq $a2->[$_]) {
+        $ok = 0;
+        last;
+        }
+    }
+    return $ok;
 }
 
 my %cache;
@@ -96,8 +96,8 @@ ok(keys %{tied(%cache)->{index}} == 5);
 
 # Test accessing the sizes.
 my $cache = tied %cache;
-ok( $cache->curr_size == 5,				       'curr_size()' );
-ok( $cache->max_size  == 5,				       'max_size()'  );
+ok( $cache->curr_size == 5,                    'curr_size()' );
+ok( $cache->max_size  == 5,                    'max_size()'  );
 
 # Test lowering the max_size.
 my @keys = keys %cache;

@@ -28,14 +28,14 @@ CHANGE_WARN
 }
 
 WriteMakefile(
-	NAME               	=> $PACKAGE,
-	VERSION_FROM       	=> "$PACKAGE_FILE.pm", # finds $VERSION
-    PREREQ_PM          	=> { 
-							Carp::Assert 	=> 	0,
-							enum			=>  0,
-						   },
-	'dist'      		=> { COMPRESS 	=> 'gzip -9',
-                             SUFFIX   	=> '.gz',
-                             DIST_DEFAULT 	=> 'all tardist',
+    NAME                => $PACKAGE,
+    VERSION_FROM        => "$PACKAGE_FILE.pm", # finds $VERSION
+    PREREQ_PM           => { 
+                            Carp::Assert    =>  0,
+                            enum            =>  0,
+                           },
+    'dist'              => { COMPRESS   => 'gzip -9',
+                             SUFFIX     => '.gz',
+                             DIST_DEFAULT   => 'all tardist',
                            },
 );

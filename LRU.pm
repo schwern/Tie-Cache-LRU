@@ -24,8 +24,8 @@ Tie::Cache::LRU - A Least-Recently Used cache
 
 =head1 SYNOPSIS
 
-	tie %cache, 'Tie::Cache::LRU', 500;
-	tie %cache, 'Tie::Cache::LRU', '400k'; #UNIMPLEMENTED
+    tie %cache, 'Tie::Cache::LRU', 500;
+    tie %cache, 'Tie::Cache::LRU', '400k'; #UNIMPLEMENTED
 
     # Use like a normal hash.
     
@@ -98,128 +98,128 @@ work on the %cache.
 =cut
 
 sub TIEHASH {
-	my($class, $max_size) = @_;
-	my $self = {};
-	
-	bless $self, $class;
-	
-	$max_size = DEFAULT_MAX_SIZE unless defined $max_size;
+    my($class, $max_size) = @_;
+    my $self = {};
+    
+    bless $self, $class;
+    
+    $max_size = DEFAULT_MAX_SIZE unless defined $max_size;
 
-	$self->_init;
-	$self->max_size($max_size);
+    $self->_init;
+    $self->max_size($max_size);
 
-	return $self;
+    return $self;
 }
 
 
 sub FETCH {
-	my($self, $key) = @_;
-	
-	return unless $self->EXISTS($key);
-	
-	my $node = $self->{index}{$key};
-	$self->_promote($node);
-	return $node->[VALUE];
+    my($self, $key) = @_;
+    
+    return unless $self->EXISTS($key);
+    
+    my $node = $self->{index}{$key};
+    $self->_promote($node);
+    return $node->[VALUE];
 }
 
 
 sub STORE {
-	my($self, $key, $value) = @_;
+    my($self, $key, $value) = @_;
 
-	if( $self->EXISTS($key) ) {
-		my $node = $self->{index}{$key};
-		$node->[VALUE] = $value;
-		$self->_promote($node);
-	}
-	else {
-		my $node = [];
-		@{$node}[KEY, VALUE] = ($key, $value);
-		
-		# Make ourselves the freshest.
-		if(defined $self->{freshest} ) {
-			$self->{freshest}->[NEXT] = $node;
-			$node->[PREV] = $self->{freshest};
-		}
-		else {
-			assert($self->{size} == 0);
-		}
-		$self->{freshest} = $node;
-		
-		# If we're the first node, we are stinky, too.
-		unless( defined $self->{stinkiest} ) {
-			assert($self->{size} == 0);
-			$self->{stinkiest} = $node;
-		}
-		$self->{size}++;
-		$self->{index}{$key} = $node;
-		$self->_cull;
-	}
-	return SUCCESS;
+    if( $self->EXISTS($key) ) {
+        my $node = $self->{index}{$key};
+        $node->[VALUE] = $value;
+        $self->_promote($node);
+    }
+    else {
+        my $node = [];
+        @{$node}[KEY, VALUE] = ($key, $value);
+        
+        # Make ourselves the freshest.
+        if(defined $self->{freshest} ) {
+            $self->{freshest}->[NEXT] = $node;
+            $node->[PREV] = $self->{freshest};
+        }
+        else {
+            assert($self->{size} == 0);
+        }
+        $self->{freshest} = $node;
+        
+        # If we're the first node, we are stinky, too.
+        unless( defined $self->{stinkiest} ) {
+            assert($self->{size} == 0);
+            $self->{stinkiest} = $node;
+        }
+        $self->{size}++;
+        $self->{index}{$key} = $node;
+        $self->_cull;
+    }
+    return SUCCESS;
 }
 
 
 sub EXISTS {
-	my($self, $key) = @_;
-	
-	return exists $self->{index}{$key};
+    my($self, $key) = @_;
+    
+    return exists $self->{index}{$key};
 }
 
 
 sub CLEAR {
-	my($self) = @_;
-	$self->_init;
+    my($self) = @_;
+    $self->_init;
 }
 
 
 sub DELETE {
-	my($self, $key) = @_;
-	
-	return unless $self->EXISTS($key);
-	
-	my $node = $self->{index}{$key};
-	$self->{freshest}  = $node->[PREV] if $self->{freshest}  == $node;
-	$self->{stinkiest} = $node->[NEXT] if $self->{stinkiest} == $node;
-	$self->_yank($node);
-	delete $self->{index}{$key};
-	
-	$self->{size}--;
-	
-	return SUCCESS;
+    my($self, $key) = @_;
+    
+    return unless $self->EXISTS($key);
+    
+    my $node = $self->{index}{$key};
+    $self->{freshest}  = $node->[PREV] if $self->{freshest}  == $node;
+    $self->{stinkiest} = $node->[NEXT] if $self->{stinkiest} == $node;
+    $self->_yank($node);
+    delete $self->{index}{$key};
+    
+    $self->{size}--;
+    
+    return SUCCESS;
 }
 
 
 # keys() should return most to least recent.
 sub FIRSTKEY {
-	my($self) = shift;
-	my $first_node = $self->{freshest};
-	assert($self->{size} == 0 xor defined $first_node);
-	return $first_node->[KEY];
+    my($self) = shift;
+    my $first_node = $self->{freshest};
+    assert($self->{size} == 0 xor defined $first_node);
+    return $first_node->[KEY];
 }
 
 sub NEXTKEY  {
-	my($self, $last_key) = @_;
-	my $last_node = $self->{index}{$last_key};
-	assert(defined $last_node) if DEBUG;
+    my($self, $last_key) = @_;
+    my $last_node = $self->{index}{$last_key};
+    assert(defined $last_node) if DEBUG;
 
-	# NEXTKEY uses PREV, yes.  We're going from newest to oldest.
-	return defined $last_node->[PREV] ? $last_node->[PREV][KEY]
-							  : undef;
+    # NEXTKEY uses PREV, yes.  We're going from newest to oldest.
+    return defined $last_node->[PREV] ? $last_node->[PREV][KEY]
+                              : undef;
 }
 
 # The chain must be broken.
 sub DESTROY  {
-	my($self) = shift;
-	
-	for(my $node = $self->{freshest}; defined $node; ) {
-		my $prev_node = $node->[PREV];
-		$node->[PREV] = undef;
-		$node->[NEXT] = undef;
-		$node = $prev_node;
-	}
-	
-	$self->_init;
-	
-	return SUCCESS;
+    my($self) = shift;
+    
+    for(my $node = $self->{freshest}; defined $node; ) {
+        my $prev_node = $node->[PREV];
+        $node->[PREV] = undef;
+        $node->[NEXT] = undef;
+        $node = $prev_node;
+    }
+    
+    $self->_init;
+    
+    return SUCCESS;
 }
 
 =pod
@@ -253,21 +253,21 @@ The size must be an integer greater than or equal to 0.
 =cut
 
 sub max_size {
-	my($self) = shift;
+    my($self) = shift;
 
-	if(@_) {
-		my ($new_max_size) = shift;
-		assert(defined $new_max_size && $new_max_size !~ /\D/);
-		$self->{max_size} = $new_max_size;
+    if(@_) {
+        my ($new_max_size) = shift;
+        assert(defined $new_max_size && $new_max_size !~ /\D/);
+        $self->{max_size} = $new_max_size;
 
-		# Immediately purge the cache if necessary.
-		$self->_cull if $self->{size} > $new_max_size;
+        # Immediately purge the cache if necessary.
+        $self->_cull if $self->{size} > $new_max_size;
 
-		return SUCCESS;
-	}
-	else {
-		return $self->{max_size};
-	}
+        return SUCCESS;
+    }
+    else {
+        return $self->{max_size};
+    }
 }
 
 
@@ -282,97 +282,97 @@ Returns the current number of items in the cache.
 =cut
 
 sub curr_size {
-	my($self) = shift;
+    my($self) = shift;
 
-	# We brook no arguments.
-	assert(!@_);
+    # We brook no arguments.
+    assert(!@_);
 
-	return $self->{size};
+    return $self->{size};
 }
 
 
 sub _init {
-	my($self) = shift;
-	
-	$self->{cache} = undef;
-	$self->{freshest} = undef;
-	$self->{stinkiest}   = undef;
-	$self->{index} = {};
-	$self->{size} = 0;
-	
-	return SUCCESS;
+    my($self) = shift;
+    
+    $self->{cache} = undef;
+    $self->{freshest} = undef;
+    $self->{stinkiest}   = undef;
+    $self->{index} = {};
+    $self->{size} = 0;
+    
+    return SUCCESS;
 }
 
 
 sub _yank {
-	my($self, $node) = @_;
-	
-	my $prev_node = $node->[PREV];
-	my $next_node = $node->[NEXT];
-	$prev_node->[NEXT] = $next_node if defined $prev_node;
-	$next_node->[PREV] = $prev_node if defined $next_node;
+    my($self, $node) = @_;
+    
+    my $prev_node = $node->[PREV];
+    my $next_node = $node->[NEXT];
+    $prev_node->[NEXT] = $next_node if defined $prev_node;
+    $next_node->[PREV] = $prev_node if defined $next_node;
 
-	$node->[NEXT] = undef;
-	$node->[PREV] = undef;
+    $node->[NEXT] = undef;
+    $node->[PREV] = undef;
 
-	return SUCCESS;
+    return SUCCESS;
 }
 
 
 sub _promote {
-	my($self, $node) = @_;
-	
-	# _promote can take a node or a key.  Get the node from the key.
-	$node = $self->{index}{$node} unless ref $node;
-	return unless defined $node;
-	
-	# Don't bother if there's only one node, or if this node is
-	# already the freshest.
-	return if $self->{size} == 1 or $self->{freshest} == $node;
-	
-	# On the off chance that we're about to promote the stinkiest node,
-	# make sure the stinkiest pointer is updated.
-	if( $self->{stinkiest} == $node ) {
-		assert(not defined $node->[PREV]);
-		$self->{stinkiest} = $node->[NEXT];
-	}
+    my($self, $node) = @_;
+    
+    # _promote can take a node or a key.  Get the node from the key.
+    $node = $self->{index}{$node} unless ref $node;
+    return unless defined $node;
+    
+    # Don't bother if there's only one node, or if this node is
+    # already the freshest.
+    return if $self->{size} == 1 or $self->{freshest} == $node;
+    
+    # On the off chance that we're about to promote the stinkiest node,
+    # make sure the stinkiest pointer is updated.
+    if( $self->{stinkiest} == $node ) {
+        assert(not defined $node->[PREV]);
+        $self->{stinkiest} = $node->[NEXT];
+    }
 
-	# Pull the $node out of its position.
-	$self->_yank($node);
-	
-	# Place the $node at the head.
-	my $old_head  = $self->{freshest};
-	$old_head->[NEXT]  = $node;
-	$node->[PREV]      = $old_head;
-	$node->[NEXT]      = undef;
+    # Pull the $node out of its position.
+    $self->_yank($node);
+    
+    # Place the $node at the head.
+    my $old_head  = $self->{freshest};
+    $old_head->[NEXT]  = $node;
+    $node->[PREV]      = $old_head;
+    $node->[NEXT]      = undef;
 
-	$self->{freshest} = $node;
-	
-	
-	return SUCCESS;
+    $self->{freshest} = $node;
+    
+    
+    return SUCCESS;
 }
 
 
 sub _cull {
-	my($self) = @_;
-	
-	# Could do this in one step, but it makes sizing the cache by
-	# memory use (not # of items) more difficult.
-	my $max_size = $self->{max_size};
-	for( ;$self->{size} > $max_size; $self->{size}-- ) {
-		my $rotten = $self->{stinkiest};
-		assert(!defined $rotton->[PREV]);
-		my $new_stink = $rotten->[NEXT];
-		
-		$rotten->[NEXT]    = undef;
-		$new_stink->[PREV] = undef;
-		
-		$self->{stinkiest} = $new_stink;
+    my($self) = @_;
+    
+    # Could do this in one step, but it makes sizing the cache by
+    # memory use (not # of items) more difficult.
+    my $max_size = $self->{max_size};
+    for( ;$self->{size} > $max_size; $self->{size}-- ) {
+        my $rotten = $self->{stinkiest};
+        assert(!defined $rotton->[PREV]);
+        my $new_stink = $rotten->[NEXT];
+        
+        $rotten->[NEXT]    = undef;
+        $new_stink->[PREV] = undef;
+        
+        $self->{stinkiest} = $new_stink;
 
-		delete $self->{index}{$rotten->[KEY]};
-	}
-	
-	return SUCCESS;
+        delete $self->{index}{$rotten->[KEY]};
+    }
+    
+    return SUCCESS;
 }
 
 =pod
