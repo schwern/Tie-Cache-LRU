@@ -10,7 +10,7 @@ use ExtUtils::MakeMaker;
 # the contents of the Makefile that is written.
 
 $PACKAGE = 'Tie::Cache::LRU';
-($PACKAGE_FILE) = $PACKAGE =~ /::([^:]+)/;
+($PACKAGE_FILE) = $PACKAGE =~ /(?:\::)([^:]+)$/;
 $LAST_API_CHANGE = 0.05;
 
 eval {
