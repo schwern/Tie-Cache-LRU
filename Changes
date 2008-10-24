@@ -1,4 +1,4 @@
-20081023
+20081023  Thu Oct 23 21:02:04 PDT 2008
     Bug Fixes
     * each() no longer goes into an infinite loop
       [rt.cpan.org 34962]
