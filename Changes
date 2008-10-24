@@ -1,6 +1,10 @@
 Next
-    New Tests
+    Test Fixes
     * Verified that each() + delete() works, as promised in "perldoc -f each"
+    * Forgot to ship the new each() test in the last version.
+
+    Doc Fixes
+    * Forgot to update the requirements list in the README in the last version
 
 
 20081023  Thu Oct 23 21:02:04 PDT 2008
