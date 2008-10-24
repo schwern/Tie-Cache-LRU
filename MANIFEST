@@ -12,5 +12,6 @@ MANIFEST
 README
 t/0_Array.t
 t/0_LinkedList.t
+t/each_loop.t
 t/LRU.t
 t/Virtual.t
