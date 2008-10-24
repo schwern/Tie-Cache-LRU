@@ -203,7 +203,8 @@ sub _init {
     $self->{stinkiest} = undef;
     $self->{index} = {};
     $self->{size} = 0;
-    
+    $self->{nodes} = [];
+
     return SUCCESS;
 }
 

@@ -242,7 +242,12 @@ sub curr_size {
 }
 
 
-sub DESTROY { }
+sub DESTROY {
+    my $self = shift;
+
+    # Break a possible circular reference, just to be thorough.
+    $self->{nodes} = [];
+}
 
 
 =pod
