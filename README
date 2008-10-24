@@ -61,3 +61,6 @@ WHAT MODULES DO I NEED?
 
     Carp::Assert
     enum
+    Class::Virtual
+    Class::Data::Inheritable
+    Test::More
