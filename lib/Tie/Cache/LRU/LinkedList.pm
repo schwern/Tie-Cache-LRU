@@ -1,8 +1,6 @@
 package Tie::Cache::LRU::LinkedList;
 
 use strict;
-use vars qw($VERSION);
-$VERSION = '0.01';
 
 use Carp::Assert;
 

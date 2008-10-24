@@ -4,12 +4,8 @@ use strict;
 
 use base qw(Tie::Cache::LRU::Array);
 
-use vars qw($VERSION);
-BEGIN {
-    $VERSION = '0.21';
-}
+our $VERSION = 20081023;
 
-=pod
 
 =head1 NAME
 

@@ -1,8 +1,6 @@
 package Tie::Cache::LRU::Array;
 
 use strict;
-use vars qw($VERSION);
-$VERSION = '0.02';
 
 use Carp::Assert;
 use base qw(Tie::Cache::LRU::Virtual);
