@@ -1,4 +1,8 @@
-Revision history for Perl extension Tie::Cache::LRU.
+20081023
+    Bug Fixes
+    * each() no longer goes into an infinite loop
+      [rt.cpan.org 34962]
+
 
 0.21  Wed Apr 10 23:20:39 EDT 2002
     * mjd found a bug in Tie::Cache::LRU::Array which caused the

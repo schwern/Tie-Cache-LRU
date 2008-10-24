@@ -199,23 +199,21 @@ sub FIRSTKEY {
 
     my $cache = $self->{cache};
 
-    my $idx = $#{$cache} + 1;
-    my $node;
-    do { $node = $self->{cache}[--$idx]; } until defined $node or $idx <= 0;
-    return $self->{cache}[$idx][KEY];
+    my @nodes;
+    for my $node (@$cache) {
+        push @nodes, $node if defined $node;
+    }
+
+    $self->{nodes} = \@nodes;
+    $self->NEXTKEY;
 }
 
 
 sub NEXTKEY {
-    my($self, $last_key) = @_;
+    my $self = shift;
 
-    my $idx = $self->{index}{$last_key};
-    return undef if $idx == 0;
-
-    my $node;
-    do { $node = $self->{cache}[--$idx]; } until defined $node or $idx <= 0;
-
-    return defined $node ? $node->[KEY] : undef;
+    my $node = pop @{$self->{nodes}};
+    return $node->[KEY];
 }
 
 

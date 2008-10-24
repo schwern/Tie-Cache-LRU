@@ -1,13 +1,6 @@
-# A template for Makefile.PL used by Arena Networks.
-# - Set the $PACKAGE variable to the name of your module.
-# - Set $LAST_API_CHANGE to reflect the last version you changed the API 
-#   of your module.
-# - Fill in your dependencies in PREREQ_PM
-# Alternatively, you can say the hell with this and use h2xs.
+#!/usr/bin/perl -w
 
 use ExtUtils::MakeMaker;
-# See lib/ExtUtils/MakeMaker.pm for details of how to influence
-# the contents of the Makefile that is written.
 
 $PACKAGE = 'Tie::Cache::LRU';
 ($PACKAGE_FILE = $PACKAGE) =~ s|::|/|g;
@@ -35,13 +28,10 @@ WriteMakefile(
     NAME                => $PACKAGE,
     VERSION_FROM        => "lib/$PACKAGE_FILE.pm", # finds $VERSION
     PREREQ_PM           => { 
-                            Carp::Assert    => 0,
-                            enum            => 0,
-                            Class::Virtual  => 0,
-                            Class::Data::Inheritable => 0,
-                           },
-    'dist'              => { COMPRESS   => 'gzip -9',
-                             SUFFIX     => '.gz',
-                             DIST_DEFAULT   => 'all tardist',
-                           },
+        Carp::Assert    => 0,
+        enum            => 0,
+        Class::Virtual  => 0,
+        Class::Data::Inheritable => 0,
+        Test::More      => 0.82,
+    },
 );
