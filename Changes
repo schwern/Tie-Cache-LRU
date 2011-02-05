@@ -1,4 +1,9 @@
-Next
+20110205  Sat, 05 Feb 2011 14:57:08 +1100
+    Misc
+    * Clarified the license
+
+
+20081023.2116  Fri Oct 24 04:21:54 2008 +0000
     Test Fixes
     * Verified that each() + delete() works, as promised in "perldoc -f each"
     * Forgot to ship the new each() test in the last version.

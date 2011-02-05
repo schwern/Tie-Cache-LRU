@@ -24,9 +24,17 @@ See the Changes file for details.
 BUG_WARN
 }
 
+
+my $mm_ver = $ExtUtils::MakeMaker::VERSION;
 WriteMakefile(
     NAME                => $PACKAGE,
-    VERSION_FROM        => "lib/$PACKAGE_FILE.pm", # finds $VERSION
+
+    VERSION_FROM        => "lib/$PACKAGE_FILE.pm",
+    ABSTRACT_FROM       => "lib/$PACKAGE_FILE.pm",
+    AUTHOR              => 'Michael G Schwern <schwern@pobox.com>',
+
+    ($mm_ver >= 6.31 ? (LICENSE => 'perl') : ()),
+
     PREREQ_PM           => { 
         Carp::Assert    => 0,
         enum            => 0,

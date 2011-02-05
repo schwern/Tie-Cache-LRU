@@ -4,7 +4,7 @@ use strict;
 
 use base qw(Tie::Cache::LRU::Array);
 
-our $VERSION = 20081023.2116;
+our $VERSION = 20110205;
 
 
 =head1 NAME
@@ -29,6 +29,9 @@ Tie::Cache::LRU - A Least-Recently Used cache
 
 
 =head1 DESCRIPTION
+
+B<NOTE> There are no plans to update this module.  Please consider
+using L<CHI> or other caching framework.
 
 This is an implementation of a least-recently used (LRU) cache keeping
 the cache in RAM.
@@ -136,12 +139,24 @@ Should eventually allow the cache to be in shared memory.
 Max size by memory use unimplemented.
 
 
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 1999-2011 by Michael G Schwern E<lt>schwern@pobox.comE<gt>.
+
+This program is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
+See L<http://dev.perl.org/licenses/artistic.html>
+
+
 =head1 AUTHOR
 
 Michael G Schwern <schwern@pobox.com> for Arena Networks
 
 
 =head1 SEE ALSO
+
+L<CHI> for a more modern cache implementation.
 
 L<Tie::Cache::LRU::Array>, L<Tie::Cache::LRU::LinkedList>,
 L<Tie::Cache::LRU::Virtual>, L<Tie::Cache>
