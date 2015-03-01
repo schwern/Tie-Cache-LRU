@@ -32,14 +32,20 @@ WriteMakefile(
     VERSION_FROM        => "lib/$PACKAGE_FILE.pm",
     ABSTRACT_FROM       => "lib/$PACKAGE_FILE.pm",
     AUTHOR              => 'Michael G Schwern <schwern@pobox.com>',
-
-    ($mm_ver >= 6.31 ? (LICENSE => 'perl') : ()),
-
+    LICENSE             => 'perl_5',
+    
     PREREQ_PM           => { 
         Carp::Assert    => 0,
         enum            => 0,
         Class::Virtual  => 0,
         Class::Data::Inheritable => 0,
         Test::More      => 0.82,
+    },
+
+    META_MERGE          => {
+        resources => {
+            bugtracker => 'https://github.com/schwern/Tie-Cache-LRU/issues',
+            repository => 'https://github.com/schwern/Tie-Cache-LRU',
+        }
     },
 );
