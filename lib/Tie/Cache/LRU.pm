@@ -4,7 +4,7 @@ use strict;
 
 use base qw(Tie::Cache::LRU::Array);
 
-our $VERSION = 20110205;
+our $VERSION = 20150301;
 
 
 =head1 NAME
