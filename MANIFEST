@@ -9,6 +9,7 @@ lib/Tie/Cache/LRU/LinkedList.pm
 lib/Tie/Cache/LRU/Virtual.pm
 Makefile.PL
 MANIFEST
+MANIFEST.SKIP
 README
 t/0_Array.t
 t/0_LinkedList.t
