@@ -141,17 +141,17 @@ Max size by memory use unimplemented.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 1999-2011 by Michael G Schwern E<lt>schwern@pobox.comE<gt>.
+Copyright 1999-2015 by Michael G Schwern E<lt>schwern@pobox.comE<gt>.
 
 This program is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
+modify it under the same terms as Perl 5 itself.
 
-See L<http://dev.perl.org/licenses/artistic.html>
+See L<http://dev.perl.org/licenses/>
 
 
 =head1 AUTHOR
 
-Michael G Schwern <schwern@pobox.com> for Arena Networks
+Michael G Schwern <schwern@pobox.com>.
 
 
 =head1 SEE ALSO
